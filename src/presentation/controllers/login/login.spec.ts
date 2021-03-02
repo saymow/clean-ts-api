@@ -15,7 +15,7 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeAuthetication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (email: string, password: string): Promise<string> {
+    async auth (email: string, password: string): Promise<string | null> {
       return 'any_token'
     }
   }
