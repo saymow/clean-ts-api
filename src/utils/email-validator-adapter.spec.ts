@@ -34,4 +34,11 @@ describe('EmailValidator Adapter', () => {
 
     expect(isEmail).toHaveBeenCalledWith('valid_email@mail.com')
   })
+
+  test('Should throw if validator throws', () => {
+    const sut = makeSut()
+    jest.spyOn(validator, 'isEmail').mockImplementationOnce(() => { throw new Error() })
+
+    expect(() => sut.isValid('valid_email@mail.com')).toThrow()
+  })
 })
