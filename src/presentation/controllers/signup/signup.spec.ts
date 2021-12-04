@@ -22,7 +22,7 @@ const makeAddAccountStub = (): AddAccount => {
         password: 'valid_password'
       }
 
-      return await new Promise((resolve) => resolve(fakeAccount))
+      return await Promise.resolve(fakeAccount)
     }
   }
 
