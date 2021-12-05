@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/saymow/node-api-structure#readme",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^2.1.0",
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.11",
@@ -43,6 +44,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "mongodb": "^4.2.1",
     "validator": "^13.7.0"
   }
 }
