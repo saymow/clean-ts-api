@@ -2,3 +2,4 @@ node_modules
 dist
 diagram.png
 coverage
+globalConfig.json
