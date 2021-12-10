@@ -43,4 +43,21 @@ describe('LogController Decorator', () => {
 
     expect(handleSpy).toHaveBeenCalledWith(httpRequest)
   })
+
+  test('Should return controller returned value', async () => {
+    const { sut } = makeSut()
+    const httpRequest: HttpRequest = {
+      body: {
+        name: 'Gustavo'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      body: {
+        name: 'Gustavo'
+      }
+    })
+  })
 })
