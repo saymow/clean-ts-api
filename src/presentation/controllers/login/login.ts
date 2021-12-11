@@ -25,7 +25,6 @@ export class LoginController implements Controller {
       if (!this.emailValidator.isValid(email)) {
         return badRequest(new InvalidParamError('email'))
       }
-
       const accessToken = await this.authentication.auth(email, password)
 
       if (!accessToken) {
