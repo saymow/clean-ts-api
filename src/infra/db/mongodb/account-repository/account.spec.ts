@@ -1,3 +1,4 @@
+import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account'
 
@@ -6,6 +7,8 @@ const makeSut = (): AccountMongoRepository => {
 }
 
 describe('Account Mongo Repository', () => {
+  let accountCollection: Collection
+
   beforeAll(async () => {
     // environment variable set up by @shelf/jest-mongodb in-memory database
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -16,17 +19,33 @@ describe('Account Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
-  test('Should return an account on success', async () => {
+  test('Should return an account on add success', async () => {
     const sut = makeSut()
     const account = await sut.add({
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password'
     })
+
+    expect(account).toBeDefined()
+    expect(account.id).toBeDefined()
+    expect(account.name).toEqual('any_name')
+    expect(account.email).toEqual('any_email@mail.com')
+    expect(account.password).toEqual('any_password')
+  })
+
+  test('Should return an account on loadByEmail succeeds', async () => {
+    const sut = makeSut()
+    await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
+    const account = await sut.loadByEmail('any_email@mail.com')
 
     expect(account).toBeDefined()
     expect(account.id).toBeDefined()
