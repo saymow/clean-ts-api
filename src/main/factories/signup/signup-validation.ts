@@ -1,13 +1,20 @@
-import { ValidationComposite, RequiredFieldValidation, CompareFieldsValidation, EmailValidation } from '../../../presentation/helpers/validators'
-import { EmailValidatorAdapter } from '../../../utils/email-validator-adapter'
+import { DbAddAccount } from '../../../data/usecases/add-account/db-add-account'
+import { BcryptAdapter } from '../../../infra/cryptography/bcrypt-adatper/bcrypt-adapter'
+import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mongo-repository'
+import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
+import { SignUpController } from '../../../presentation/controllers/signup/signup-controller'
+import { Controller } from '../../../presentation/protocols'
+import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
+import { makeSignUpValidation } from './signup-validation-factory'
 
-export const makeSignUpValidation = (): ValidationComposite => {
-  return new ValidationComposite([
-    new RequiredFieldValidation('name'),
-    new RequiredFieldValidation('email'),
-    new RequiredFieldValidation('password'),
-    new RequiredFieldValidation('passwordConfirmation'),
-    new CompareFieldsValidation('password', 'passwordConfirmation'),
-    new EmailValidation('email', new EmailValidatorAdapter())
-  ])
+export const makeSignUpController = (): Controller => {
+  const salt = 12
+
+  return new LogControllerDecorator(
+    new SignUpController(
+      new DbAddAccount(new BcryptAdapter(salt), new AccountMongoRepository()),
+      makeSignUpValidation()
+    ),
+    new LogMongoRepository()
+  )
 }
