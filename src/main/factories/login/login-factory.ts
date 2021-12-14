@@ -6,7 +6,7 @@ import { LoginController } from '../../../presentation/controllers/login/login-c
 import { DbAuthentication } from '../../../data/usecases/authentication/db-authentication'
 import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
 import { AccountMongoRepository } from '../../../infra/db/mongodb/account/account-mongo-repository'
-import { BcryptAdapter } from '../../../infra/cryptography/bcrypt-adatper/bcrypt-adapter'
+import { BcryptAdapter } from '../../../infra/cryptography/bcrypt-adapter/bcrypt-adapter'
 import { JwtAdapter } from '../../../infra/cryptography/jwt-adapter/jwt-adapter'
 
 export const makeLoginController = (): Controller => {
