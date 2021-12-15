@@ -1,5 +1,6 @@
 node_modules
 dist
 diagram.png
+diagram.drawio
 coverage
 globalConfig.json
