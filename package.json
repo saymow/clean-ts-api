@@ -1,7 +1,7 @@
 {
-  "name": "api-structure",
+  "name": "node-api-structure",
   "version": "1.1.0",
-  "description": "",
+  "description": "A TDD, DDD, Solid and Clean Architecture training ",
   "main": "index.js",
   "scripts": {
     "start": "node dist/main/server.js",
@@ -20,7 +20,7 @@
     "url": "git+https://github.com/saymow/node-api-structure.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Gustavo Alves",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/saymow/node-api-structure/issues"
@@ -57,5 +57,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.2.1",
     "validator": "^13.7.0"
+  },
+  "engines": {
+    "node": "16.13.0"
   }
 }
