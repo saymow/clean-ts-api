@@ -1,6 +1,6 @@
 FROM node:16
 
-WORKDIR /usr/src/clean_node_api
+WORKDIR /usr/src/clean-node-api
 
 COPY ./package.json .
 
