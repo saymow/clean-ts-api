@@ -17,11 +17,10 @@ export class SignUpController implements Controller {
         return badRequest(error)
       }
 
-      const account = await this.addAccount.execute({ name, email, password })
+      await this.addAccount.execute({ name, email, password })
+      const accessToken = await this.authentication.auth({ email, password })
 
-      await this.authentication.auth({ email, password })
-
-      return ok(account)
+      return ok({ accessToken })
     } catch (error) {
       return serverError(error)
     }
