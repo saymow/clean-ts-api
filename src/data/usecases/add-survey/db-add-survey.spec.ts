@@ -1,7 +1,7 @@
 import { AddSurveyRepository, AddSurveyModel, SurveyModel } from './db-add-survey-protocols'
 import { DbAddSurvey } from './db-add-survey'
 
-const makeAddSurveyModel = (): AddSurveyModel => ({
+const makeAddSurveyData = (): AddSurveyModel => ({
   question: 'any_question',
   answers: [
     {
@@ -11,7 +11,7 @@ const makeAddSurveyModel = (): AddSurveyModel => ({
   ]
 })
 
-const makeSurveyModel = (): SurveyModel => ({
+const makeSurveyData = (): SurveyModel => ({
   question: 'any_question',
   answers: [
     {
@@ -24,7 +24,7 @@ const makeSurveyModel = (): SurveyModel => ({
 const makeAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
     async add (surveyData: AddSurveyModel): Promise<SurveyModel> {
-      return await Promise.resolve(makeSurveyModel())
+      return await Promise.resolve(makeSurveyData())
     }
   }
 
@@ -47,7 +47,7 @@ describe('AddSurvey UseCase', () => {
   test('Should call AddSurveyRepository with correct values', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
-    const surveyData = makeAddSurveyModel()
+    const surveyData = makeAddSurveyData()
     await sut.execute(surveyData)
 
     expect(addSpy).toHaveBeenCalledWith(surveyData)
@@ -57,6 +57,6 @@ describe('AddSurvey UseCase', () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
     jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementationOnce(() => { throw new Error() })
 
-    await expect((sut.execute(makeAddSurveyModel()))).rejects.toThrow()
+    await expect((sut.execute(makeAddSurveyData()))).rejects.toThrow()
   })
 })
