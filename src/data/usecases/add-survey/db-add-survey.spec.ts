@@ -3,18 +3,30 @@ import { DbAddSurvey } from './db-add-survey'
 import { AddSurveyModel } from '../../../domain/usecases/add-survey'
 import { SurveyModel } from '../../../domain/models/survey'
 
+const makeAddSurveyModel = (): AddSurveyModel => ({
+  question: 'any_question',
+  answers: [
+    {
+      answer: 'any_answer',
+      image: 'any_image'
+    }
+  ]
+})
+
+const makeSurveyModel = (): SurveyModel => ({
+  question: 'any_question',
+  answers: [
+    {
+      answer: 'any_answer',
+      image: 'any_image'
+    }
+  ]
+})
+
 const makeAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
-    async add (accountData: AddSurveyModel): Promise<SurveyModel> {
-      return await Promise.resolve({
-        question: 'any_question',
-        answers: [
-          {
-            answer: 'any_answer',
-            image: 'any_image'
-          }
-        ]
-      })
+    async add (surveyData: AddSurveyModel): Promise<SurveyModel> {
+      return await Promise.resolve(makeSurveyModel())
     }
   }
 
@@ -37,18 +49,9 @@ describe('AddSurvey UseCase', () => {
   test('Should call AddSurveyRepository with correct values', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
-    const data: AddSurveyModel = {
-      question: 'any_question',
-      answers: [
-        {
-          answer: 'any_answer',
-          image: 'any_image'
-        }
-      ]
-    }
+    const surveyData = makeAddSurveyModel()
+    await sut.execute(makeAddSurveyModel())
 
-    await sut.execute(data)
-
-    expect(addSpy).toHaveBeenCalledWith(data)
+    expect(addSpy).toHaveBeenCalledWith(surveyData)
   })
 })
