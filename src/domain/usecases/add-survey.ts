@@ -1,5 +1,5 @@
 export interface AddSurveyAnswerModel {
-  image: string
+  image?: string
   answer: string
 }
 
