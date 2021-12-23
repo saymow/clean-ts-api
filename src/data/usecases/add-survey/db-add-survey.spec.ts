@@ -12,6 +12,7 @@ const makeAddSurveyData = (): AddSurveyModel => ({
 })
 
 const makeSurveyData = (): SurveyModel => ({
+  id: 'any_id',
   question: 'any_question',
   answers: [
     {
