@@ -1,5 +1,6 @@
 import { LoadAccountByToken, HttpRequest, HttpResponse, Middleware } from './auth-middleware-protocols'
-import { unauthorized } from '../helpers/http/http-helper'
+import { forbidden, unauthorized } from '../helpers/http/http-helper'
+import { AccessDeniedError } from '../errors'
 
 export class AuthMiddleware implements Middleware {
   constructor (
@@ -13,6 +14,10 @@ export class AuthMiddleware implements Middleware {
       return unauthorized()
     }
 
-    await this.loadAccountByToken.execute(accessToken)
+    const user = await this.loadAccountByToken.execute(accessToken)
+
+    if (!user) {
+      return forbidden(new AccessDeniedError())
+    }
   }
 }
