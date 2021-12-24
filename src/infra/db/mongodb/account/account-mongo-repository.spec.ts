@@ -40,8 +40,8 @@ describe('Survey Mongo Repository', () => {
     })
   })
 
-  describe('loadByEmaill()', () => {
-    test('Should return an account on loadByEmail succeeds', async () => {
+  describe('loadByEmail()', () => {
+    test('Should return an account on loadByEmail success', async () => {
       const sut = makeSut()
       await accountCollection.insertOne({
         name: 'any_name',
@@ -82,6 +82,25 @@ describe('Survey Mongo Repository', () => {
 
       expect(account).toBeDefined()
       expect(account.accessToken).toEqual('any_token')
+    })
+  })
+
+  describe('loadByToken()', () => {
+    test('Should return an account on loadByToken without role', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        accessToken: 'any_token'
+      })
+      const account = await sut.loadByToken('any_token')
+
+      expect(account).toBeDefined()
+      expect(account.id).toBeDefined()
+      expect(account.name).toEqual('any_name')
+      expect(account.email).toEqual('any_email@mail.com')
+      expect(account.password).toEqual('any_password')
     })
   })
 })
