@@ -65,7 +65,7 @@ describe('Survey Mongo Repository', () => {
     })
   })
 
-  describe('updateAccessToken', () => {
+  describe('updateAccessToken()', () => {
     test('Should update the account accessToken when updateAccessToken success', async () => {
       const sut = makeSut()
       const { insertedId } = await accountCollection.insertOne({
@@ -103,22 +103,35 @@ describe('Survey Mongo Repository', () => {
       expect(account.password).toEqual('any_password')
     })
 
-    test('Should return an account on loadByToken with role', async () => {
+    test('Should return an account on loadByToken if user is admin', async () => {
       const sut = makeSut()
       await accountCollection.insertOne({
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
         accessToken: 'any_token',
-        role: 'any_role'
+        role: 'admin'
       })
-      const account = await sut.loadByToken('any_token', 'any_role')
+      const account = await sut.loadByToken('any_token')
 
       expect(account).toBeDefined()
       expect(account.id).toBeDefined()
       expect(account.name).toEqual('any_name')
       expect(account.email).toEqual('any_email@mail.com')
       expect(account.password).toEqual('any_password')
+    })
+
+    test('Should return null on loadByToken with invalid role', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        accessToken: 'any_token'
+      })
+      const account = await sut.loadByToken('any_token', 'admin')
+
+      expect(account).toBeNull()
     })
 
     test('Should return null if loadByToken fails', async () => {
