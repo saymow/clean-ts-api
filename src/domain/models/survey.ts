@@ -1,6 +1,6 @@
 export interface SurveyAnswerModel {
-  image: string
-  answer?: string
+  image?: string
+  answer: string
 }
 
 export interface SurveyModel {
