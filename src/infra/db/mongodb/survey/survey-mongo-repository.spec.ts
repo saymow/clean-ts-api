@@ -25,6 +25,7 @@ describe('Account Mongo Repository', () => {
 
   test('Should return an survey on add success', async () => {
     const sut = makeSut()
+    const now = new Date()
     const survey = await sut.add({
       question: 'any_question',
       answers: [
@@ -35,7 +36,8 @@ describe('Account Mongo Repository', () => {
         {
           answer: 'other_answer'
         }
-      ]
+      ],
+      date: now
     })
 
     expect(survey).toBeDefined()
@@ -48,5 +50,6 @@ describe('Account Mongo Repository', () => {
     expect(survey.answers[1]).toEqual(expect.objectContaining({
       answer: 'other_answer'
     }))
+    expect(survey.date).toEqual(now)
   })
 })
