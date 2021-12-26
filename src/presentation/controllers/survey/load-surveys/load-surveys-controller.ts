@@ -1,6 +1,5 @@
-import { LoadSurveys } from '../../../../domain/usecases/load-surveys'
+import { LoadSurveys, Controller, HttpRequest, HttpResponse } from './load-surveys-controller-protocols'
 import { serverError, ok } from '../../../helpers/http/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '../../../protocols'
 
 export class LoadSurveysController implements Controller {
   constructor (private readonly loadSurveys: LoadSurveys) { }
@@ -8,8 +7,8 @@ export class LoadSurveysController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       return ok(await this.loadSurveys.execute())
-    } catch (err) {
-      return serverError(err)
+    } catch (error) {
+      return serverError(error)
     }
   }
 }
