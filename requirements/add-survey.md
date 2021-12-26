@@ -1,4 +1,4 @@
-# Criar Enquente
+# Criar Enquete
 
 > ## Caso de sucesso
 > - ✅ Recebe uma requisição do tipo **POST** na rota **/api/surveys** 
