@@ -1,4 +1,4 @@
-import { serverError } from '../../../helpers/http/http-helper'
+import { ok, serverError } from '../../../helpers/http/http-helper'
 import { SurveyModel } from '../../../../domain/models/survey'
 import { LoadSurveys } from '../../../../domain/usecases/load-surveys'
 import { LoadSurveysController } from './load-survey'
@@ -30,5 +30,18 @@ describe('LoadSurveys Controller', () => {
     const httpResponse = await sut.handle({})
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  it('Should return 200 on success', async () => {
+    class LoadSurveysStub implements LoadSurveys {
+      async execute (): Promise<SurveyModel[]> {
+        return []
+      }
+    }
+    const loadSurveyStub = new LoadSurveysStub()
+    const sut = new LoadSurveysController(loadSurveyStub)
+    const httpResponse = await sut.handle({})
+
+    expect(httpResponse).toEqual(ok([]))
   })
 })
