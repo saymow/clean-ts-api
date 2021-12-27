@@ -79,4 +79,11 @@ describe('DbLoadSurveys', () => {
 
     await expect(sut.execute()).rejects.toThrow()
   })
+
+  test('Should return surveys on success', async () => {
+    const { sut } = makeSut()
+    const surveys = await sut.execute()
+
+    expect(surveys).toEqual(makeFakeSurveys())
+  })
 })
