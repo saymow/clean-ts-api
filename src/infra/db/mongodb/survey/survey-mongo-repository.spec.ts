@@ -1,6 +1,23 @@
 import { Collection } from 'mongodb'
+import { AddSurveyModel } from '../../../../domain/usecases/add-survey'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
+
+const makeFakeAddSurvey = (): AddSurveyModel => ({
+  question: 'any question',
+  answers: [
+    {
+      answer: 'any_answer 1',
+      image: 'any_image 1'
+    },
+    {
+      answer: 'any_answer 2'
+    }
+  ],
+  date: new Date()
+})
+
+const makeFakeAddSurveys = (): AddSurveyModel[] => ([makeFakeAddSurvey(), makeFakeAddSurvey()])
 
 const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
@@ -26,32 +43,29 @@ describe('Account Mongo Repository', () => {
   describe('add()', () => {
     test('Should return an survey on add success', async () => {
       const sut = makeSut()
-      const now = new Date()
-      const survey = await sut.add({
-        question: 'any_question',
-        answers: [
-          {
-            answer: 'any_answer',
-            image: 'any_image'
-          },
-          {
-            answer: 'other_answer'
-          }
-        ],
-        date: now
-      })
+      const survey = await sut.add(makeFakeAddSurvey())
 
       expect(survey).toBeDefined()
       expect(survey.id).toBeDefined()
-      expect(survey.question).toEqual('any_question')
+      expect(survey.question).toEqual('any question')
       expect(survey.answers[0]).toEqual(expect.objectContaining({
-        image: 'any_image',
-        answer: 'any_answer'
+        image: 'any_image 1',
+        answer: 'any_answer 1'
       }))
       expect(survey.answers[1]).toEqual(expect.objectContaining({
-        answer: 'other_answer'
+        answer: 'any_answer 2'
       }))
-      expect(survey.date).toEqual(now)
+    })
+  })
+
+  describe('loadAll()', () => {
+    test('Should return surveys on success', async () => {
+      await surveyCollection.insertMany(makeFakeAddSurveys())
+      const sut = makeSut()
+      const surveys = await sut.loadAll()
+
+      expect(surveys.length).toBe(2)
+      expect(surveys[0].question).toBe('any question')
     })
   })
 })
