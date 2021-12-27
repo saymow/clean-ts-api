@@ -57,4 +57,17 @@ describe('DbLoadSurveys', () => {
 
     expect(loadSpy).toHaveBeenCalledTimes(1)
   })
+
+  test('Should throw if LoadSurveysRepository throws', async () => {
+    class LoadSurveysRepositoryStub implements LoadSurveysRepository {
+      async load (): Promise<SurveyModel[]> {
+        return makeFakeSurveys()
+      }
+    }
+    const loadSurveysRepositoryStub = new LoadSurveysRepositoryStub()
+    jest.spyOn(loadSurveysRepositoryStub, 'load').mockImplementationOnce(() => { throw new Error() })
+    const sut = new DbLoadSurveys(loadSurveysRepositoryStub)
+
+    await expect(sut.execute()).rejects.toThrow()
+  })
 })
