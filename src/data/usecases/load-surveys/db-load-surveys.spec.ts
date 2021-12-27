@@ -34,6 +34,28 @@ const makeFakeSurveys = (): SurveyModel[] => ([
   }
 ])
 
+const makeLoadSurveysRepository = (): LoadSurveysRepository => {
+  class LoadSurveysRepositoryStub implements LoadSurveysRepository {
+    async load (): Promise<SurveyModel[]> {
+      return makeFakeSurveys()
+    }
+  }
+
+  return new LoadSurveysRepositoryStub()
+}
+
+interface SutTypes {
+  sut: DbLoadSurveys
+  loadSurveysRepositoryStub: LoadSurveysRepository
+}
+
+const makeSut = (): SutTypes => {
+  const loadSurveysRepositoryStub = makeLoadSurveysRepository()
+  const sut = new DbLoadSurveys(loadSurveysRepositoryStub)
+
+  return { sut, loadSurveysRepositoryStub }
+}
+
 describe('DbLoadSurveys', () => {
   beforeAll(() => {
     mockDate.set(new Date())
@@ -44,29 +66,16 @@ describe('DbLoadSurveys', () => {
   })
 
   test('Should call LoadSurveysRepository once', async () => {
-    class LoadSurveysRepositoryStub implements LoadSurveysRepository {
-      async load (): Promise<SurveyModel[]> {
-        return makeFakeSurveys()
-      }
-    }
-    const loadSurveysRepositoryStub = new LoadSurveysRepositoryStub()
+    const { sut, loadSurveysRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadSurveysRepositoryStub, 'load')
-    const sut = new DbLoadSurveys(loadSurveysRepositoryStub)
-
     await sut.execute()
 
     expect(loadSpy).toHaveBeenCalledTimes(1)
   })
 
   test('Should throw if LoadSurveysRepository throws', async () => {
-    class LoadSurveysRepositoryStub implements LoadSurveysRepository {
-      async load (): Promise<SurveyModel[]> {
-        return makeFakeSurveys()
-      }
-    }
-    const loadSurveysRepositoryStub = new LoadSurveysRepositoryStub()
+    const { sut, loadSurveysRepositoryStub } = makeSut()
     jest.spyOn(loadSurveysRepositoryStub, 'load').mockImplementationOnce(() => { throw new Error() })
-    const sut = new DbLoadSurveys(loadSurveysRepositoryStub)
 
     await expect(sut.execute()).rejects.toThrow()
   })
