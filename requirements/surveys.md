@@ -3,7 +3,7 @@
 > ## Caso de sucesso
 > - ❌ Recebe uma requisição do tipo **GET** na rota **/api/surveys** 
 > - ❌ Valida se a requisição foi feita por um usuário
-> - ❌ Retorna 204 se não tiver nenhuma enquete
+> - ✅ Retorna 204 se não tiver nenhuma enquete
 > - ✅ Retorna 200 com os dados da enquete
 
 > ## Exceções
