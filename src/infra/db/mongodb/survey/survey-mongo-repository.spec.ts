@@ -23,33 +23,35 @@ describe('Account Mongo Repository', () => {
     await surveyCollection.deleteMany({})
   })
 
-  test('Should return an survey on add success', async () => {
-    const sut = makeSut()
-    const now = new Date()
-    const survey = await sut.add({
-      question: 'any_question',
-      answers: [
-        {
-          answer: 'any_answer',
-          image: 'any_image'
-        },
-        {
-          answer: 'other_answer'
-        }
-      ],
-      date: now
-    })
+  describe('add()', () => {
+    test('Should return an survey on add success', async () => {
+      const sut = makeSut()
+      const now = new Date()
+      const survey = await sut.add({
+        question: 'any_question',
+        answers: [
+          {
+            answer: 'any_answer',
+            image: 'any_image'
+          },
+          {
+            answer: 'other_answer'
+          }
+        ],
+        date: now
+      })
 
-    expect(survey).toBeDefined()
-    expect(survey.id).toBeDefined()
-    expect(survey.question).toEqual('any_question')
-    expect(survey.answers[0]).toEqual(expect.objectContaining({
-      image: 'any_image',
-      answer: 'any_answer'
-    }))
-    expect(survey.answers[1]).toEqual(expect.objectContaining({
-      answer: 'other_answer'
-    }))
-    expect(survey.date).toEqual(now)
+      expect(survey).toBeDefined()
+      expect(survey.id).toBeDefined()
+      expect(survey.question).toEqual('any_question')
+      expect(survey.answers[0]).toEqual(expect.objectContaining({
+        image: 'any_image',
+        answer: 'any_answer'
+      }))
+      expect(survey.answers[1]).toEqual(expect.objectContaining({
+        answer: 'other_answer'
+      }))
+      expect(survey.date).toEqual(now)
+    })
   })
 })
