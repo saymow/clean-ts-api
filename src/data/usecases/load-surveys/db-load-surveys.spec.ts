@@ -36,7 +36,7 @@ const makeFakeSurveys = (): SurveyModel[] => ([
 
 const makeLoadSurveysRepository = (): LoadSurveysRepository => {
   class LoadSurveysRepositoryStub implements LoadSurveysRepository {
-    async load (): Promise<SurveyModel[]> {
+    async loadAll (): Promise<SurveyModel[]> {
       return makeFakeSurveys()
     }
   }
@@ -67,15 +67,15 @@ describe('DbLoadSurveys', () => {
 
   test('Should call LoadSurveysRepository once', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
-    const loadSpy = jest.spyOn(loadSurveysRepositoryStub, 'load')
+    const loadAllSpy = jest.spyOn(loadSurveysRepositoryStub, 'loadAll')
     await sut.execute()
 
-    expect(loadSpy).toHaveBeenCalledTimes(1)
+    expect(loadAllSpy).toHaveBeenCalledTimes(1)
   })
 
   test('Should throw if LoadSurveysRepository throws', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
-    jest.spyOn(loadSurveysRepositoryStub, 'load').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockImplementationOnce(() => { throw new Error() })
 
     await expect(sut.execute()).rejects.toThrow()
   })
