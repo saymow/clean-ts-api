@@ -75,4 +75,43 @@ describe('Survey Routes', () => {
         .expect(204)
     })
   })
+
+  describe('GET /surveys', () => {
+    test('Should return 401 on load surveys without accessToken', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(401)
+    })
+
+    test('Should return 204 on add survey', async () => {
+      const { insertedId: id } = await accountCollection.insertOne({
+        name: 'Gustavo',
+        email: 'gustavo_alves2010@yahoo.com.br',
+        password: '123',
+        role: 'admin'
+      })
+      const accessToken = sign({ id }, ENV.JWT_SECRET)
+
+      await accountCollection.updateOne({ _id: id }, {
+        $set: { accessToken }
+      })
+
+      await request(app)
+        .post('/api/surveys')
+        .set('x-access-token', accessToken)
+        .send({
+          question: 'question',
+          answers: [
+            {
+              answer: 'Answer 1',
+              images: 'https://image-name.com'
+            },
+            {
+              answer: 'Answer 2'
+            }
+          ]
+        })
+        .expect(204)
+    })
+  })
 })
