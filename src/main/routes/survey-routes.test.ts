@@ -5,10 +5,26 @@ import app from '../config/app'
 import ENV from '../config/env'
 import { sign } from 'jsonwebtoken'
 
-describe('Survey Routes', () => {
-  let surveyCollection: Collection
-  let accountCollection: Collection
+let surveyCollection: Collection
+let accountCollection: Collection
 
+const makeAccessToken = async (): Promise<string> => {
+  const { insertedId: id } = await accountCollection.insertOne({
+    name: 'Gustavo',
+    email: 'gustavo_alves2010@yahoo.com.br',
+    password: '123',
+    role: 'admin'
+  })
+  const accessToken = sign({ id }, ENV.JWT_SECRET)
+
+  await accountCollection.updateOne({ _id: id }, {
+    $set: { accessToken }
+  })
+
+  return accessToken
+}
+
+describe('Survey Routes', () => {
   beforeAll(async () => {
     // environment variable set up by @shelf/jest-mongodb in-memory database
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -45,17 +61,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on add survey', async () => {
-      const { insertedId: id } = await accountCollection.insertOne({
-        name: 'Gustavo',
-        email: 'gustavo_alves2010@yahoo.com.br',
-        password: '123',
-        role: 'admin'
-      })
-      const accessToken = sign({ id }, ENV.JWT_SECRET)
-
-      await accountCollection.updateOne({ _id: id }, {
-        $set: { accessToken }
-      })
+      const accessToken = await makeAccessToken()
 
       await request(app)
         .post('/api/surveys')
@@ -84,17 +90,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on load surveys with valid accessToken', async () => {
-      const { insertedId: id } = await accountCollection.insertOne({
-        name: 'Gustavo',
-        email: 'gustavo_alves2010@yahoo.com.br',
-        password: '123',
-        role: 'admin'
-      })
-      const accessToken = sign({ id }, ENV.JWT_SECRET)
-
-      await accountCollection.updateOne({ _id: id }, {
-        $set: { accessToken }
-      })
+      const accessToken = await makeAccessToken()
 
       await request(app)
         .get('/api/surveys')
