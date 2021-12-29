@@ -83,7 +83,7 @@ describe('Survey Routes', () => {
         .expect(401)
     })
 
-    test('Should return 204 on add survey', async () => {
+    test('Should return 204 on load surveys with valid accessToken', async () => {
       const { insertedId: id } = await accountCollection.insertOne({
         name: 'Gustavo',
         email: 'gustavo_alves2010@yahoo.com.br',
@@ -97,20 +97,8 @@ describe('Survey Routes', () => {
       })
 
       await request(app)
-        .post('/api/surveys')
+        .get('/api/surveys')
         .set('x-access-token', accessToken)
-        .send({
-          question: 'question',
-          answers: [
-            {
-              answer: 'Answer 1',
-              images: 'https://image-name.com'
-            },
-            {
-              answer: 'Answer 2'
-            }
-          ]
-        })
         .expect(204)
     })
   })
