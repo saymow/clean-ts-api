@@ -1,6 +1,6 @@
 {
   "name": "node-api-structure",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A TDD, DDD, Solid and Clean Architecture training ",
   "main": "index.js",
   "scripts": {
