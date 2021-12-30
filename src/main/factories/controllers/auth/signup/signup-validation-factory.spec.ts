@@ -13,7 +13,7 @@ const makeEmailValidator = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
-jest.mock('../../../../../validation/validators/validators-composite')
+jest.mock('@/validation/validators/validators-composite')
 
 describe('SignUpValidation factory', () => {
   test('Should call ValidationComposite with all validations', () => {
