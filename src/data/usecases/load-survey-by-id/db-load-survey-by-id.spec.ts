@@ -64,4 +64,11 @@ describe('DbLoadSurveyById useCase', () => {
 
     await expect(sut.execute('any_id')).rejects.toThrow()
   })
+
+  test('Should return a Survey on success', async () => {
+    const { sut } = makeSut()
+    const survey = await sut.execute('any_id')
+
+    expect(survey).toEqual(makeFakeSurvey())
+  })
 })
