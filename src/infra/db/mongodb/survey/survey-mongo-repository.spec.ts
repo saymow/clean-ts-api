@@ -65,6 +65,7 @@ describe('Account Mongo Repository', () => {
       const surveys = await sut.loadAll()
 
       expect(surveys.length).toBe(2)
+      expect(surveys[0].id).toBeDefined()
       expect(surveys[0].question).toBe('any question')
     })
 
@@ -83,6 +84,7 @@ describe('Account Mongo Repository', () => {
       const survey = await sut.loadById(insertedId.toString())
 
       expect(survey).toBeTruthy()
+      expect(survey.id).toBeTruthy()
     })
   })
 })
