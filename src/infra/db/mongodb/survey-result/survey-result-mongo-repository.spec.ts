@@ -80,5 +80,29 @@ describe('SurveyResult Mongo Repository', () => {
       expect(surveyResult.id).toBeDefined()
       expect(surveyResult.answer).toBe(answer)
     })
+
+    test('Should update survey result if exits', async () => {
+      const { id: surveyId, answers: [{ answer: firstAnswer }, { answer: secondAnswer }] } = await makeSurvey()
+      const { id: accountId } = await makeAccount()
+      const { insertedId: insertedSurveyResultId } = await surveyResultCollection.insertOne({
+        surveyId,
+        accountId,
+        answer: firstAnswer,
+        date: new Date()
+      })
+      const sut = makeSut()
+
+      const surveyResult = await sut.save({
+        surveyId,
+        accountId,
+        answer: secondAnswer,
+        date: new Date()
+      })
+
+      expect(surveyResult).toBeDefined()
+      expect(surveyResult.id).toEqual(insertedSurveyResultId.toHexString())
+      expect(secondAnswer).not.toBe(firstAnswer)
+      expect(surveyResult.answer).toEqual(secondAnswer)
+    })
   })
 })
