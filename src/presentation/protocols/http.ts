@@ -1,4 +1,5 @@
 export type HttpRequest = {
+  userId?: string
   headers?: any
   params?: any
   body?: any
