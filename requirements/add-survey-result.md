@@ -12,7 +12,7 @@
 > ## Exceções
 > - ❌ Retorna erro **404** se a API não existir
 > - ❌ Retorna erro **401** se  token de autenticação não for fornecido
-> - ❌ Retorna erro **403** se o usuário survey_id passado nna URL for inválido
+> - ❌ Retorna erro **403** se o usuário survey_id passado na URL for inválido
 > - ❌ Retorna erro **400** se o campo **answer** não for fornecidas pelo client
 > - ❌ Retorna erro **500** se der erro ao tentar criar resultado de enquente
 > - ❌ Retorna erro **500** se der erro ao tentar atualizar resultado de enquente
