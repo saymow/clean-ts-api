@@ -1,4 +1,4 @@
-import { SaveSurveyResult, LoadSurveyById, Controller, HttpRequest, HttpResponse } from './save-survey-result-controller-protocol'
+import { SaveSurveyResult, LoadSurveyById, Controller, HttpRequest, HttpResponse } from './save-survey-result-controller-protocols'
 import { InvalidParamError } from '@/presentation/errors'
 import { ok, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
 
