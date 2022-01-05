@@ -16,13 +16,13 @@ export class AuthMiddleware implements Middleware {
         return unauthorized()
       }
 
-      const account = await this.loadAccountByToken.execute(accessToken, this.role)
+      const user = await this.loadAccountByToken.execute(accessToken, this.role)
 
-      if (!account) {
+      if (!user) {
         return forbidden(new AccessDeniedError())
       }
 
-      return ok({ accountId: account.id })
+      return ok({ userId: user.id })
     } catch (error) {
       return serverError(error)
     }
