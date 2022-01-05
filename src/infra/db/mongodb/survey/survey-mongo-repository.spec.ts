@@ -1,6 +1,6 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
-import { AddSurveyModel } from '@/domain/usecases/add-survey'
+import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
 import { Collection } from 'mongodb'
 
 const makeFakeAddSurvey = (): AddSurveyModel => ({
@@ -65,6 +65,7 @@ describe('Account Mongo Repository', () => {
       const surveys = await sut.loadAll()
 
       expect(surveys.length).toBe(2)
+      expect(surveys[0].id).toBeDefined()
       expect(surveys[0].question).toBe('any question')
     })
 
@@ -73,6 +74,17 @@ describe('Account Mongo Repository', () => {
       const surveys = await sut.loadAll()
 
       expect(surveys.length).toBe(0)
+    })
+  })
+
+  describe('loadById()', () => {
+    test('Should load survey by id on success', async () => {
+      const { insertedId } = await surveyCollection.insertOne(makeFakeAddSurvey())
+      const sut = makeSut()
+      const survey = await sut.loadById(insertedId.toString())
+
+      expect(survey).toBeTruthy()
+      expect(survey.id).toBeTruthy()
     })
   })
 })
