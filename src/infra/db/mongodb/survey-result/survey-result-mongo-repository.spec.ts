@@ -1,6 +1,6 @@
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
-import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
+import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 import { Collection } from 'mongodb'
 import { SurveyModel } from '@/domain/models/survey'
 import { AccountModel } from '@/domain/models/account'
@@ -9,7 +9,7 @@ let accountCollection: Collection
 let surveyCollection: Collection
 let surveyResultCollection: Collection
 
-const makeFakeAddSurvey = (): AddSurveyModel => ({
+const makeFakeAddSurvey = (): AddSurveyParams => ({
   question: 'any question',
   answers: [
     {
