@@ -1,3 +1,4 @@
+import { mockAddAccountParams } from '@/domain/test'
 import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
@@ -26,11 +27,7 @@ describe('Survey Mongo Repository', () => {
   describe('add()', () => {
     test('Should return an account on add success', async () => {
       const sut = makeSut()
-      const account = await sut.add({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      const account = await sut.add(mockAddAccountParams())
 
       expect(account).toBeDefined()
       expect(account.id).toBeDefined()
@@ -43,11 +40,7 @@ describe('Survey Mongo Repository', () => {
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
       const sut = makeSut()
-      await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      await accountCollection.insertOne(mockAddAccountParams())
       const account = await sut.loadByEmail('any_email@mail.com')
 
       expect(account).toBeDefined()
@@ -68,11 +61,7 @@ describe('Survey Mongo Repository', () => {
   describe('updateAccessToken()', () => {
     test('Should update the account accessToken when updateAccessToken success', async () => {
       const sut = makeSut()
-      const { insertedId } = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      const { insertedId } = await accountCollection.insertOne(mockAddAccountParams())
       let account = await accountCollection.findOne(insertedId)
 
       expect(account.accessToken).toBeFalsy()
@@ -88,12 +77,12 @@ describe('Survey Mongo Repository', () => {
   describe('loadByToken()', () => {
     test('Should return an account on loadByToken without role', async () => {
       const sut = makeSut()
-      await accountCollection.insertOne({
+      await accountCollection.insertOne(Object.assign({
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
         accessToken: 'any_token'
-      })
+      }))
       const account = await sut.loadByToken('any_token')
 
       expect(account).toBeDefined()

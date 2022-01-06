@@ -1,45 +1,27 @@
-import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
-import { MongoHelper } from '../helpers/mongo-helper'
-import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
-import { Collection } from 'mongodb'
-import { SurveyModel } from '@/domain/models/survey'
 import { AccountModel } from '@/domain/models/account'
+import { SurveyModel } from '@/domain/models/survey'
+import { mockAddAccountParams, mockAddSurveyParams } from '@/domain/test'
+import { Collection } from 'mongodb'
+import { MongoHelper } from '../helpers/mongo-helper'
+import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 
 let accountCollection: Collection
 let surveyCollection: Collection
 let surveyResultCollection: Collection
-
-const makeFakeAddSurvey = (): AddSurveyParams => ({
-  question: 'any question',
-  answers: [
-    {
-      answer: 'any_answer 1',
-      image: 'any_image 1'
-    },
-    {
-      answer: 'any_answer 2'
-    }
-  ],
-  date: new Date()
-})
 
 const makeSut = (): SurveyResultMongoRepository => {
   return new SurveyResultMongoRepository()
 }
 
 const makeSurvey = async (): Promise<SurveyModel> => {
-  const { insertedId } = await surveyCollection.insertOne(makeFakeAddSurvey())
+  const { insertedId } = await surveyCollection.insertOne(mockAddSurveyParams())
   const survey = await surveyCollection.findOne(insertedId)
 
   return MongoHelper.map(survey)
 }
 
 const makeAccount = async (): Promise<AccountModel> => {
-  const { insertedId } = await accountCollection.insertOne({
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password'
-  })
+  const { insertedId } = await accountCollection.insertOne(mockAddAccountParams())
   const account = await accountCollection.findOne(insertedId)
 
   return MongoHelper.map(account)
@@ -101,7 +83,6 @@ describe('SurveyResult Mongo Repository', () => {
 
       expect(surveyResult).toBeDefined()
       expect(surveyResult.id).toEqual(insertedSurveyResultId.toHexString())
-      expect(secondAnswer).not.toBe(firstAnswer)
       expect(surveyResult.answer).toEqual(secondAnswer)
     })
   })
