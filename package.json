@@ -62,6 +62,7 @@
     "module-alias": "^2.2.2",
     "mongodb": "^4.2.1",
     "nodemon": "^2.0.15",
+    "swagger-ui-express": "^4.3.0",
     "validator": "^13.7.0"
   },
   "engines": {
