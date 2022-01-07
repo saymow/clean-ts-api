@@ -1,5 +1,6 @@
 import { EmailValidatorAdapter } from './email-validator-adapter'
 import validator from 'validator'
+import { throwError } from '@/domain/test'
 
 jest.mock('validator', () => ({
   isEmail (): boolean {
@@ -37,7 +38,7 @@ describe('EmailValidator Adapter', () => {
 
   test('Should throw if validator throws', () => {
     const sut = makeSut()
-    jest.spyOn(validator, 'isEmail').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(validator, 'isEmail').mockImplementationOnce(throwError)
 
     expect(() => sut.isValid('valid_email@mail.com')).toThrow()
   })

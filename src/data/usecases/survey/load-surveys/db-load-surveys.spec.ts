@@ -1,47 +1,8 @@
-import { SurveyModel, LoadSurveysRepository } from './db-load-surveys-protocols'
-import { DbLoadSurveys } from './db-load-surveys'
+import { mockLoadSurveysRepository } from '@/data/test'
+import { mockSurveyModels, throwError } from '@/domain/test'
 import mockDate from 'mockdate'
-
-const makeFakeSurveys = (): SurveyModel[] => ([
-  {
-    id: 'any_id',
-    question: 'any question',
-    answers: [
-      {
-        answer: 'any_answer 1',
-        image: 'any_image 1'
-      },
-      {
-        answer: 'any_answer 2'
-      }
-    ],
-    date: new Date()
-  },
-  {
-    id: 'any_id 2',
-    question: 'any question 2',
-    answers: [
-      {
-        answer: 'any_answer 1',
-        image: 'any_image 1'
-      },
-      {
-        answer: 'any_answer 2'
-      }
-    ],
-    date: new Date()
-  }
-])
-
-const makeLoadSurveysRepository = (): LoadSurveysRepository => {
-  class LoadSurveysRepositoryStub implements LoadSurveysRepository {
-    async loadAll (): Promise<SurveyModel[]> {
-      return makeFakeSurveys()
-    }
-  }
-
-  return new LoadSurveysRepositoryStub()
-}
+import { DbLoadSurveys } from './db-load-surveys'
+import { LoadSurveysRepository } from './db-load-surveys-protocols'
 
 type SutTypes = {
   sut: DbLoadSurveys
@@ -49,7 +10,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveysRepositoryStub = makeLoadSurveysRepository()
+  const loadSurveysRepositoryStub = mockLoadSurveysRepository()
   const sut = new DbLoadSurveys(loadSurveysRepositoryStub)
 
   return { sut, loadSurveysRepositoryStub }
@@ -74,7 +35,7 @@ describe('DbLoadSurveys', () => {
 
   test('Should throw if LoadSurveysRepository throws', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
-    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockImplementationOnce(throwError)
 
     await expect(sut.execute()).rejects.toThrow()
   })
@@ -83,6 +44,6 @@ describe('DbLoadSurveys', () => {
     const { sut } = makeSut()
     const surveys = await sut.execute()
 
-    expect(surveys).toEqual(makeFakeSurveys())
+    expect(surveys).toEqual(mockSurveyModels())
   })
 })

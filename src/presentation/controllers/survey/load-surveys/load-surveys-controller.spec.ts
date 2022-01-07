@@ -1,48 +1,9 @@
-import { SurveyModel, LoadSurveys } from './load-surveys-controller-protocols'
+import { mockSurveyModels, throwError } from '@/domain/test'
 import { noContent, ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { LoadSurveysController } from './load-surveys-controller'
+import { mockLoadSurveys } from '@/presentation/test'
 import mockDate from 'mockdate'
-
-const makeFakeSurveys = (): SurveyModel[] => ([
-  {
-    id: 'any_id',
-    question: 'any question',
-    answers: [
-      {
-        answer: 'any_answer 1',
-        image: 'any_image 1'
-      },
-      {
-        answer: 'any_answer 2'
-      }
-    ],
-    date: new Date()
-  },
-  {
-    id: 'any_id 2',
-    question: 'any question 2',
-    answers: [
-      {
-        answer: 'any_answer 1',
-        image: 'any_image 1'
-      },
-      {
-        answer: 'any_answer 2'
-      }
-    ],
-    date: new Date()
-  }
-])
-
-const makeLoadSurveys = (): LoadSurveys => {
-  class LoadSurveysStub implements LoadSurveys {
-    async execute (): Promise<SurveyModel[]> {
-      return makeFakeSurveys()
-    }
-  }
-
-  return new LoadSurveysStub()
-}
+import { LoadSurveysController } from './load-surveys-controller'
+import { LoadSurveys } from './load-surveys-controller-protocols'
 
 type SutTypes = {
   sut: LoadSurveysController
@@ -50,7 +11,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveysStub = makeLoadSurveys()
+  const loadSurveysStub = mockLoadSurveys()
   const sut = new LoadSurveysController(loadSurveysStub)
 
   return { sut, loadSurveysStub }
@@ -75,7 +36,7 @@ describe('LoadSurveys Controller', () => {
 
   it('Should return 500 if LoadSurveys throws', async () => {
     const { sut, loadSurveysStub } = makeSut()
-    jest.spyOn(loadSurveysStub, 'execute').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(loadSurveysStub, 'execute').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle({})
 
     expect(httpResponse).toEqual(serverError(new Error()))
@@ -93,6 +54,6 @@ describe('LoadSurveys Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
 
-    expect(httpResponse).toEqual(ok(makeFakeSurveys()))
+    expect(httpResponse).toEqual(ok(mockSurveyModels()))
   })
 })
