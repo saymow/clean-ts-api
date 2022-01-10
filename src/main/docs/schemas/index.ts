@@ -1,10 +1,23 @@
-export * from './account-schema'
-export * from './error-schema'
-export * from './login-params-schema'
-export * from './surveys-schema'
-export * from './survey-schema'
-export * from './survey-answer-schema'
-export * from './api-key-auth-schema'
-export * from './add-survey-params-schema'
-export * from './save-survey-result-params-schema'
-export * from './survey-result-schema'
+import { accountSchema } from './account-schema'
+import { addSurveyParamsSchema } from './add-survey-params-schema'
+import { errorSchema } from './error-schema'
+import { loginParamsSchema } from './login-params-schema'
+import { saveSurveyResultParamsSchema } from './save-survey-result-params-schema'
+import { signupParamsSchema } from './signup-params-schema'
+import { surveyAnswerSchema } from './survey-answer-schema'
+import { surveyResultSchema } from './survey-result-schema'
+import { surveySchema } from './survey-schema'
+import { surveysSchema } from './surveys-schema'
+
+export default {
+  account: accountSchema,
+  loginParams: loginParamsSchema,
+  signUpParams: signupParamsSchema,
+  error: errorSchema,
+  surveys: surveysSchema,
+  survey: surveySchema,
+  surveyAnswer: surveyAnswerSchema,
+  addSurveyParams: addSurveyParamsSchema,
+  saveSurveyResultParams: saveSurveyResultParamsSchema,
+  surveyResult: surveyResultSchema
+}

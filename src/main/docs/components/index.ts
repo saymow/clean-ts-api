@@ -1,6 +1,19 @@
-export * from './bad-request'
-export * from './unauthorized'
-export * from './access-denied'
-export * from './server-error'
-export * from './not-found'
-export * from './no-content'
+import { apiKeyAuthSchema } from '../schemas/api-key-auth-schema'
+import { forbidden } from './access-denied'
+import { badRequest } from './bad-request'
+import { noContent } from './no-content'
+import { notFound } from './not-found'
+import { serverError } from './server-error'
+import { unauthorized } from './unauthorized'
+
+export default {
+  securitySchemes: {
+    apiKeyAuth: apiKeyAuthSchema
+  },
+  badRequest,
+  forbidden,
+  unauthorized,
+  serverError,
+  notFound,
+  noContent
+}
