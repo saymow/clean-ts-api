@@ -1,7 +1,7 @@
 import { AccountModel } from '@/domain/models/account'
 import { SurveyModel } from '@/domain/models/survey'
 import { mockAddAccountParams, mockAddSurveyParams } from '@/domain/test'
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 
@@ -59,16 +59,17 @@ describe('SurveyResult Mongo Repository', () => {
       })
 
       expect(surveyResult).toBeDefined()
-      expect(surveyResult.id).toBeDefined()
-      expect(surveyResult.answer).toBe(answer)
+      expect(surveyResult.answers[0].answer).toBe(answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
 
     test('Should update survey result if exits', async () => {
       const { id: surveyId, answers: [{ answer: firstAnswer }, { answer: secondAnswer }] } = await makeSurvey()
       const { id: accountId } = await makeAccount()
-      const { insertedId: insertedSurveyResultId } = await surveyResultCollection.insertOne({
-        surveyId,
-        accountId,
+      await surveyResultCollection.insertOne({
+        surveyId: new ObjectId(surveyId),
+        accountId: new ObjectId(accountId),
         answer: firstAnswer,
         date: new Date()
       })
@@ -82,8 +83,9 @@ describe('SurveyResult Mongo Repository', () => {
       })
 
       expect(surveyResult).toBeDefined()
-      expect(surveyResult.id).toEqual(insertedSurveyResultId.toHexString())
-      expect(surveyResult.answer).toEqual(secondAnswer)
+      expect(surveyResult.answers[0].answer).toBe(secondAnswer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
   })
 })
