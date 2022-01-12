@@ -5,6 +5,7 @@ import { loginParamsSchema } from './login-params-schema'
 import { saveSurveyResultParamsSchema } from './save-survey-result-params-schema'
 import { signupParamsSchema } from './signup-params-schema'
 import { surveyAnswerSchema } from './survey-answer-schema'
+import { surveyResultAnswerSchema } from './survey-result-answer-schema'
 import { surveyResultSchema } from './survey-result-schema'
 import { surveySchema } from './survey-schema'
 import { surveysSchema } from './surveys-schema'
@@ -19,5 +20,6 @@ export default {
   surveyAnswer: surveyAnswerSchema,
   addSurveyParams: addSurveyParamsSchema,
   saveSurveyResultParams: saveSurveyResultParamsSchema,
-  surveyResult: surveyResultSchema
+  surveyResult: surveyResultSchema,
+  surveyResultAnswer: surveyResultAnswerSchema
 }
