@@ -94,4 +94,28 @@ describe('SurveyResult Mongo Repository', () => {
       expect(surveyResult.answers[1].percent).toBe(0)
     })
   })
+
+  describe('loadBySurveyId()', () => {
+    test('Should load survey result', async () => {
+      const { id: surveyId, answers: [{ answer: firstAnswer }] } = await makeSurvey()
+      const { id: accountId } = await makeAccount()
+      await surveyResultCollection.insertOne({
+        surveyId: new ObjectId(surveyId),
+        accountId: new ObjectId(accountId),
+        answer: firstAnswer,
+        date: new Date()
+      })
+      const sut = makeSut()
+
+      const surveyResult = await sut.loadBySurveyId(surveyId, accountId)
+
+      expect(surveyResult).toBeDefined()
+      expect(surveyResult.surveyId).toBe(surveyId)
+      expect(surveyResult.answers[0].answer).toBe(firstAnswer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
+      expect(surveyResult.answers[1].count).toBe(0)
+      expect(surveyResult.answers[1].percent).toBe(0)
+    })
+  })
 })
