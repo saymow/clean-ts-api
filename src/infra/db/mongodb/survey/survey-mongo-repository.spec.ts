@@ -40,7 +40,7 @@ describe('Account Mongo Repository', () => {
         answer: 'any_answer'
       }))
       expect(survey.answers[1]).toEqual(expect.objectContaining({
-        answer: 'any_answer 2'
+        answer: 'other_answer'
       }))
     })
   })
