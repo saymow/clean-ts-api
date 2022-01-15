@@ -5,7 +5,7 @@ import { InvalidParamError } from '@/presentation/errors'
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { HttpRequest } from '@/presentation/protocols'
 import { mockLoadSurveyByIdStub, mockLoadSurveyResult } from '@/presentation/test'
-import { LoadSurveyResultController } from './load-survey-result-controlller'
+import { LoadSurveyResultController } from './load-survey-result-controller'
 import mockDate from 'mockdate'
 
 type SutTypes = {
