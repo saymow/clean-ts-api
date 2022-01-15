@@ -12,4 +12,4 @@
 > - ✅ Retorna erro 401 se  token de autenticação não for fornecido
 > - ✅ Retorna erro 403 se o usuário não for admin
 > - ✅ Retorna erro 400 se **question** ou **answers** não forem fornecidas pelo client
-> - ✅ Retorna erro 500 se erro ao criar a enquente
+> - ✅ Retorna erro 500 se erro ao criar a enquete
