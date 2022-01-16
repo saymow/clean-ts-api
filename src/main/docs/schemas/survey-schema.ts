@@ -4,6 +4,7 @@ export const surveySchema = {
     id: { type: 'string' },
     question: { type: 'string' },
     date: { type: 'string' },
+    didAnswer: { type: 'boolean' },
     answers: {
       type: '',
       items: {
@@ -11,5 +12,5 @@ export const surveySchema = {
       }
     }
   },
-  required: ['id', 'question', 'date', 'answers']
+  required: ['id', 'question', 'date', 'answers', 'didAnswer']
 }
