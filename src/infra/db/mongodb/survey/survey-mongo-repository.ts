@@ -5,6 +5,7 @@ import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-r
 import { MongoHelper } from '../helpers/mongo-helper'
 import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey/load-survey-by-id-repository'
 import { ObjectId } from 'mongodb'
+import { QueryBuilder } from '../helpers'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository {
   async add (surveyData: AddSurveyParams): Promise<SurveyModel> {
@@ -15,9 +16,34 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
     return MongoHelper.map(survey)
   }
 
-  async loadAll (): Promise<SurveyModel[]> {
+  async loadAll (userId: string): Promise<SurveyModel[]> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
-    const surveys = await surveyCollection.find().toArray()
+    const query = new QueryBuilder()
+      .lookup({
+        from: 'surveyResults',
+        foreignField: 'surveyId',
+        localField: '_id',
+        as: 'result'
+      }).project({
+        _id: 1,
+        question: 1,
+        answers: 1,
+        date: 1,
+        didAnswer: {
+          $gte: [{
+            $size: {
+              $filter: {
+                input: '$result',
+                as: 'item',
+                cond: {
+                  $eq: ['$$item.accountId', new ObjectId(userId)]
+                }
+              }
+            }
+          }, 1]
+        }
+      }).build()
+    const surveys = await surveyCollection.aggregate(query).toArray()
 
     return MongoHelper.mapCollection(surveys)
   }

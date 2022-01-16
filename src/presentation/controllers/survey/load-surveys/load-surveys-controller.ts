@@ -6,7 +6,8 @@ export class LoadSurveysController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const surveys = await this.loadSurveys.execute()
+      const { userId } = httpRequest
+      const surveys = await this.loadSurveys.execute(userId)
 
       if (!surveys.length) {
         return noContent()
