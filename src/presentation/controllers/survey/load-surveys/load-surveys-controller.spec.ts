@@ -3,7 +3,11 @@ import { noContent, ok, serverError } from '@/presentation/helpers/http/http-hel
 import { mockLoadSurveys } from '@/presentation/test'
 import mockDate from 'mockdate'
 import { LoadSurveysController } from './load-surveys-controller'
-import { LoadSurveys } from './load-surveys-controller-protocols'
+import { HttpRequest, LoadSurveys } from './load-surveys-controller-protocols'
+
+const mockRequest = (): HttpRequest => ({
+  userId: 'any_id'
+})
 
 type SutTypes = {
   sut: LoadSurveysController
@@ -26,18 +30,18 @@ describe('LoadSurveys Controller', () => {
     mockDate.reset()
   })
 
-  it('Should call LoadSurveys', async () => {
+  it('Should call LoadSurveys with correct value', async () => {
     const { sut, loadSurveysStub } = makeSut()
     const loadSpy = jest.spyOn(loadSurveysStub, 'execute')
-    await sut.handle({})
+    await sut.handle(mockRequest())
 
-    expect(loadSpy).toHaveBeenCalledTimes(1)
+    expect(loadSpy).toHaveBeenCalledWith(mockRequest().userId)
   })
 
   it('Should return 500 if LoadSurveys throws', async () => {
     const { sut, loadSurveysStub } = makeSut()
     jest.spyOn(loadSurveysStub, 'execute').mockImplementationOnce(throwError)
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -45,14 +49,14 @@ describe('LoadSurveys Controller', () => {
   it('Should return 204 if LoadSurveys returns empty', async () => {
     const { sut, loadSurveysStub } = makeSut()
     jest.spyOn(loadSurveysStub, 'execute').mockReturnValueOnce(Promise.resolve([]))
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(noContent())
   })
 
   it('Should return 200 on success', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(ok(mockSurveyModels()))
   })

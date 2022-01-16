@@ -25,24 +25,24 @@ describe('DbLoadSurveys', () => {
     mockDate.reset()
   })
 
-  test('Should call LoadSurveysRepository once', async () => {
+  test('Should call LoadSurveysRepository with correct values', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
     const loadAllSpy = jest.spyOn(loadSurveysRepositoryStub, 'loadAll')
-    await sut.execute()
+    await sut.execute('any_id')
 
-    expect(loadAllSpy).toHaveBeenCalledTimes(1)
+    expect(loadAllSpy).toHaveBeenCalledWith('any_id')
   })
 
   test('Should throw if LoadSurveysRepository throws', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut()
     jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockImplementationOnce(throwError)
 
-    await expect(sut.execute()).rejects.toThrow()
+    await expect(sut.execute('any_id')).rejects.toThrow()
   })
 
   test('Should return surveys on success', async () => {
     const { sut } = makeSut()
-    const surveys = await sut.execute()
+    const surveys = await sut.execute('any_id')
 
     expect(surveys).toEqual(mockSurveyModels())
   })
