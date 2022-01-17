@@ -7,7 +7,7 @@ const surveyToEmptySurveyResultMapper = (survey: SurveyModel): SurveyResultModel
   answers: survey.answers.map((answer) =>
     Object.assign(
       answer,
-      { count: 0, percent: 0 }
+      { count: 0, percent: 0, isCurrentAccountAnswer: false }
     ))
 })
 export class DbLoadSurveyResult implements LoadSurveyResult {
