@@ -2,41 +2,46 @@ import { Hasher } from '@/data/protocols/cryptography/hasher'
 import { HashComparer } from '@/data/protocols/cryptography/hash-comparer'
 import { Encrypter } from '@/data/protocols/cryptography/encrypter'
 import { Decrypter } from '@/data/protocols/cryptography/decrypter'
+import faker from 'faker'
 
-export const mockHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return await Promise.resolve('any_hashed_password')
-    }
+export class HasherSpy implements Hasher {
+  digest = faker.random.uuid()
+  plaintext: string
+
+  async hash (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return await Promise.resolve(this.digest)
   }
-
-  return new HasherStub()
 }
 
-export const mockDecrypter = (): Decrypter => {
-  class DecrypterStub implements Decrypter {
-    async decrypt (token: string): Promise<string> {
-      return 'any_value'
-    }
-  }
+export class DecrypterSpy implements Decrypter {
+  plaintext: string
+  digest = faker.random.uuid()
 
-  return new DecrypterStub()
+  async decrypt (token: string): Promise<string> {
+    this.plaintext = token
+    return this.digest
+  }
 }
 
-export const mockEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_token')
-    }
+export class EncrypterSpy implements Encrypter {
+  plaintext: string
+  ciphertext = faker.random.uuid()
+
+  async encrypt (value: string): Promise<string> {
+    this.plaintext = value
+    return await Promise.resolve(this.ciphertext)
   }
-  return new EncrypterStub()
 }
 
-export const mockHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return await Promise.resolve(true)
-    }
+export class HashComparerSpy implements HashComparer {
+  plaintext: string
+  digest: string
+  isValid = true
+
+  async compare (value: string, hash: string): Promise<boolean> {
+    this.plaintext = value
+    this.digest = hash
+    return await Promise.resolve(this.isValid)
   }
-  return new HashComparerStub()
 }

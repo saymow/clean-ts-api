@@ -5,32 +5,34 @@ import { AddAccount, AddAccountParams } from '@/domain/usecases/account/add-acco
 import { Authentication, AuthenticationParams } from '@/domain/usecases/account/authentication'
 import { LoadAccountByToken } from '@/domain/usecases/account/load-account-by-token'
 
-export const mockAddAccount = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    async execute (account: AddAccountParams): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
-  }
+export class AddAccountSpy implements AddAccount {
+  addAccountParams: AddAccountParams
+  accountModel = mockAccountModel()
 
-  return new AddAccountStub()
+  async execute (account: AddAccountParams): Promise<AccountModel> {
+    this.addAccountParams = account
+    return await Promise.resolve(this.accountModel)
+  }
 }
 
-export const mockAuthentication = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationParams): Promise<AuthenticationModel> {
-      return mockAuthenticationModel()
-    }
-  }
+export class AuthenticationSpy implements Authentication {
+  authenticationParams: AuthenticationParams
+  authenticationModel = mockAuthenticationModel()
 
-  return new AuthenticationStub()
+  async auth (authentication: AuthenticationParams): Promise<AuthenticationModel> {
+    this.authenticationParams = authentication
+    return this.authenticationModel
+  }
 }
 
-export const mockLoadAccountByToken = (): LoadAccountByToken => {
-  class LoadAccountByTokenStub implements LoadAccountByToken {
-    async execute (token: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
-  }
+export class LoadAccountByTokenSpy implements LoadAccountByToken {
+  token: string
+  role?: string
+  accountModel = mockAccountModel()
 
-  return new LoadAccountByTokenStub()
+  async execute (token: string, role?: string): Promise<AccountModel> {
+    this.token = token
+    this.role = role
+    return await Promise.resolve(this.accountModel)
+  }
 }

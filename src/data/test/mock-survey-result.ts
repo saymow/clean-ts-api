@@ -4,22 +4,23 @@ import { mockSurveyResultModel } from '@/domain/test'
 import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { LoadSurveyResultRepository } from '../protocols/db/survey-result/load-survey-result-repository'
 
-export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
-  class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-    async save (data: SaveSurveyResultParams): Promise<void> {
-      return await Promise.resolve()
-    }
-  }
+export class SaveSurveyResultRepositorySpy implements SaveSurveyResultRepository {
+  surveyResultParams: SaveSurveyResultParams
 
-  return new SaveSurveyResultRepositoryStub()
+  async save (data: SaveSurveyResultParams): Promise<void> {
+    this.surveyResultParams = data
+    return await Promise.resolve()
+  }
 }
 
-export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
-  class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository {
-    async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
-      return await Promise.resolve(mockSurveyResultModel())
-    }
-  }
+export class LoadSurveyResultRepositorySpy implements LoadSurveyResultRepository {
+  surveyId: string
+  userId: string
+  surveyResultModel = mockSurveyResultModel()
 
-  return new LoadSurveyResultRepositoryStub()
+  async loadBySurveyId (surveyId: string, userId: string): Promise<SurveyResultModel> {
+    this.surveyId = surveyId
+    this.userId = userId
+    return await Promise.resolve(this.surveyResultModel)
+  }
 }
