@@ -52,19 +52,19 @@ describe('DbAddAccount UseCase', () => {
     await expect(sut.execute(mockAddAccountParams())).rejects.toThrow()
   })
 
-  test('Should return an account on success', async () => {
+  test('Should return true on success', async () => {
     const { sut } = makeSut()
-    const account = await sut.execute(mockAddAccountParams())
+    const bool = await sut.execute(mockAddAccountParams())
 
-    expect(account).toEqual(mockAccountModel())
+    expect(bool).toBeTruthy()
   })
 
-  test('Should return null if LoadAccountByEmailRepository not return null', async () => {
+  test('Should return false if LoadAccountByEmailRepository not returns null', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
     loadAccountByEmailRepositorySpy.accountModel = mockAccountModel()
-    const account = await sut.execute(mockAddAccountParams())
+    const bool = await sut.execute(mockAddAccountParams())
 
-    expect(account).toBeNull()
+    expect(bool).toBeFalsy()
   })
 
   test('Should call LoadAccountByEmailRepository with correct email', async () => {
