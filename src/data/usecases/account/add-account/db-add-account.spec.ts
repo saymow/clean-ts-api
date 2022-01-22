@@ -13,7 +13,7 @@ const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
   const addAccountRepositorySpy = new AddAccountRepositorySpy()
   const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
-  loadAccountByEmailRepositorySpy.accountModel = null
+  loadAccountByEmailRepositorySpy.result = null
   const sut = new DbAddAccount(hasherSpy, addAccountRepositorySpy, loadAccountByEmailRepositorySpy)
 
   return { sut, hasherSpy, addAccountRepositorySpy, loadAccountByEmailRepositorySpy }
@@ -61,7 +61,7 @@ describe('DbAddAccount UseCase', () => {
 
   test('Should return false if LoadAccountByEmailRepository not returns null', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
-    loadAccountByEmailRepositorySpy.accountModel = mockAccountModel()
+    loadAccountByEmailRepositorySpy.result = mockAccountModel()
     const bool = await sut.execute(mockAddAccountParams())
 
     expect(bool).toBeFalsy()
@@ -71,6 +71,6 @@ describe('DbAddAccount UseCase', () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
     await sut.execute(mockAddAccountParams())
 
-    expect(loadAccountByEmailRepositorySpy.plaintext).toBe(mockAddAccountParams().email)
+    expect(loadAccountByEmailRepositorySpy.email).toBe(mockAddAccountParams().email)
   })
 })

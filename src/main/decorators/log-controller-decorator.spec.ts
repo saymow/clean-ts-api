@@ -1,12 +1,11 @@
 import { LogErrorRepositorySpy } from '@/data/test'
-import { mockAccountModel } from '@/domain/test'
 import { ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse } from '@/presentation/protocols'
 import faker from 'faker'
 import { LogControllerDecorator } from './log-controller-decorator'
 
 class ControllerSpy implements Controller {
-  httpResponse = ok(mockAccountModel())
+  httpResponse = ok(faker.random.uuid())
   request: any
 
   async handle (httpRequest: any): Promise<HttpResponse> {
@@ -47,10 +46,10 @@ describe('LogController Decorator', () => {
   })
 
   test('Should return controller returned value', async () => {
-    const { sut } = makeSut()
+    const { sut, controllerSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
 
-    expect(httpResponse).toEqual(ok(mockAccountModel()))
+    expect(httpResponse).toEqual(controllerSpy.httpResponse)
   })
 
   test('Should call logErrorRepository with correct error if controller returns a server error', async () => {

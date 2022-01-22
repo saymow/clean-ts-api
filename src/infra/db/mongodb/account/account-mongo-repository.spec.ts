@@ -25,15 +25,10 @@ describe('Survey Mongo Repository', () => {
   })
 
   describe('add()', () => {
-    test('Should return an account on add success', async () => {
+    test('Should not throw on add success', async () => {
       const sut = makeSut()
-      const account = await sut.add(mockAddAccountParams())
 
-      expect(account).toBeDefined()
-      expect(account.id).toBeDefined()
-      expect(account.name).toEqual('any_name')
-      expect(account.email).toEqual('any_email@mail.com')
-      expect(account.password).toEqual('any_password')
+      await expect(sut.add(mockAddAccountParams())).resolves.toBeUndefined()
     })
   })
 

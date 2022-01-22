@@ -1,4 +1,3 @@
-import { AccountModel } from '@/domain/models/account'
 import { SurveyModel } from '@/domain/models/survey'
 import { mockAddAccountParams, mockAddSurveyParams } from '@/domain/test'
 import { Collection, ObjectId } from 'mongodb'
@@ -20,11 +19,10 @@ const makeSurvey = async (): Promise<SurveyModel> => {
   return MongoHelper.map(survey)
 }
 
-const makeAccount = async (): Promise<AccountModel> => {
+const makeAccountId = async (): Promise<string> => {
   const { insertedId } = await accountCollection.insertOne(mockAddAccountParams())
-  const account = await accountCollection.findOne(insertedId)
 
-  return MongoHelper.map(account)
+  return insertedId.toHexString()
 }
 
 describe('SurveyResult Mongo Repository', () => {
@@ -48,7 +46,7 @@ describe('SurveyResult Mongo Repository', () => {
   describe('save()', () => {
     test('Should return add survey result if its new', async () => {
       const { id: surveyId, answers: [{ answer }] } = await makeSurvey()
-      const { id: accountId } = await makeAccount()
+      const accountId = await makeAccountId()
       const sut = makeSut()
 
       await sut.save({
@@ -68,7 +66,7 @@ describe('SurveyResult Mongo Repository', () => {
 
     test('Should update survey result if exits', async () => {
       const { id: surveyId, answers: [{ answer: firstAnswer }, { answer: secondAnswer }] } = await makeSurvey()
-      const { id: accountId } = await makeAccount()
+      const accountId = await makeAccountId()
       await surveyResultCollection.insertOne({
         surveyId: new ObjectId(surveyId),
         accountId: new ObjectId(accountId),
@@ -95,7 +93,7 @@ describe('SurveyResult Mongo Repository', () => {
   describe('loadBySurveyId()', () => {
     test('Should load survey result', async () => {
       const { id: surveyId, answers: [{ answer: firstAnswer }] } = await makeSurvey()
-      const { id: accountId } = await makeAccount()
+      const accountId = await makeAccountId()
       await surveyResultCollection.insertOne({
         surveyId: new ObjectId(surveyId),
         accountId: new ObjectId(accountId),
@@ -119,9 +117,9 @@ describe('SurveyResult Mongo Repository', () => {
 
     test('Should load survey result 2', async () => {
       const { id: surveyId, answers: [{ answer: firstAnswer }, { answer: secondAnswer }] } = await makeSurvey()
-      const { id: accountId } = await makeAccount()
-      const { id: accountId2 } = await makeAccount()
-      const { id: accountId3 } = await makeAccount()
+      const accountId = await makeAccountId()
+      const accountId2 = await makeAccountId()
+      const accountId3 = await makeAccountId()
       await surveyResultCollection.insertMany([{
         surveyId: new ObjectId(surveyId),
         accountId: new ObjectId(accountId),
@@ -155,9 +153,9 @@ describe('SurveyResult Mongo Repository', () => {
 
     test('Should load survey result 3', async () => {
       const { id: surveyId, answers: [{ answer: firstAnswer }, { answer: secondAnswer }] } = await makeSurvey()
-      const { id: accountId } = await makeAccount()
-      const { id: accountId2 } = await makeAccount()
-      const { id: accountId3 } = await makeAccount()
+      const accountId = await makeAccountId()
+      const accountId2 = await makeAccountId()
+      const accountId3 = await makeAccountId()
       await surveyResultCollection.insertMany([{
         surveyId: new ObjectId(surveyId),
         accountId: new ObjectId(accountId),
@@ -185,7 +183,7 @@ describe('SurveyResult Mongo Repository', () => {
 
     test('Should return null if there is no survey result', async () => {
       const { id: surveyId } = await makeSurvey()
-      const { id: accountId } = await makeAccount()
+      const accountId = await makeAccountId()
       const sut = makeSut()
 
       const surveyResult = await sut.loadBySurveyId(surveyId, accountId)

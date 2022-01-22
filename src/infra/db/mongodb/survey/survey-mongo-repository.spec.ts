@@ -1,9 +1,8 @@
+import { AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-repository'
+import { mockAddAccountParams, mockAddSurveyParams } from '@/domain/test'
+import { Collection, ObjectId } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
-import { Collection, ObjectId } from 'mongodb'
-import { mockAddAccountParams, mockAddSurveyParams } from '@/domain/test'
-import { AccountModel } from '@/domain/models/account'
-import { AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-repository'
 
 const mockAddSurveysParams = (): AddSurveyRepository.Params[] => ([mockAddSurveyParams(), mockAddSurveyParams()])
 
@@ -11,11 +10,10 @@ const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
 }
 
-const makeAccount = async (): Promise<AccountModel> => {
+const makeAccountId = async (): Promise<string> => {
   const { insertedId } = await accountCollection.insertOne(mockAddAccountParams())
-  const account = await accountCollection.findOne(insertedId)
 
-  return MongoHelper.map(account)
+  return insertedId.toHexString()
 }
 
 let accountCollection: Collection
@@ -61,17 +59,17 @@ describe('Account Mongo Repository', () => {
 
   describe('loadAll()', () => {
     test('Should return surveys on success', async () => {
-      const account = await makeAccount()
+      const accountId = await makeAccountId()
       const result = await surveyCollection.insertMany(mockAddSurveysParams())
       const addedSurveys = await surveyCollection.findOne({ _id: result.insertedIds[0] })
       await surveyResultCollection.insertOne({
         surveyId: addedSurveys._id,
-        accountId: new ObjectId(account.id),
+        accountId: new ObjectId(accountId),
         answer: addedSurveys.answers[0].answer,
         date: new Date()
       })
       const sut = makeSut()
-      const surveys = await sut.loadAll(account.id)
+      const surveys = await sut.loadAll(accountId)
 
       expect(surveys.length).toBe(2)
       expect(surveys[0].id).toBeDefined()
@@ -82,9 +80,9 @@ describe('Account Mongo Repository', () => {
     })
 
     test('Should return an empty list on success', async () => {
-      const account = await makeAccount()
+      const accountId = await makeAccountId()
       const sut = makeSut()
-      const surveys = await sut.loadAll(account.id)
+      const surveys = await sut.loadAll(accountId)
 
       expect(surveys.length).toBe(0)
     })
