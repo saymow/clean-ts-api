@@ -4,16 +4,11 @@ import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-hel
 import { LoadSurveyByIdSpy, SaveSurveyResultSpy } from '@/presentation/test'
 import mockDate from 'mockdate'
 import { SaveSurveyResultController } from './save-survey-result-controller'
-import { HttpRequest } from './save-survey-result-controller-protocols'
 
-const mockRequest = (): HttpRequest => ({
+const mockRequest = (): SaveSurveyResultController.Request => ({
   userId: 'any_id',
-  params: {
-    surveyId: 'any_id'
-  },
-  body: {
-    answer: 'any_answer'
-  }
+  surveyId: 'any_id',
+  answer: 'any_answer'
 })
 
 type SutTypes = {
@@ -65,8 +60,9 @@ describe('SaveSurveyResult Controller', () => {
   test('Should returns 403 if an invalid answer is provided', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({
-      params: { surveyId: 'any_id' },
-      body: { answer: 'invalid_answer' }
+      userId: 'any_id',
+      surveyId: 'any_id',
+      answer: 'invalid_answer'
     })
 
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('answer')))

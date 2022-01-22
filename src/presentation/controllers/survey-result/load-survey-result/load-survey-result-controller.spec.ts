@@ -4,7 +4,6 @@ import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-hel
 import { LoadSurveyByIdSpy, LoadSurveyResultSpy } from '@/presentation/test'
 import mockDate from 'mockdate'
 import { LoadSurveyResultController } from './load-survey-result-controller'
-import { HttpRequest } from './load-survey-result-controller-protocols'
 
 type SutTypes = {
   sut: LoadSurveyResultController
@@ -20,9 +19,9 @@ const makeSut = (): SutTypes => {
   return { sut, loadSurveyByIdSpy, loadSurveyResultSpy }
 }
 
-const mockRequest = (): HttpRequest => ({
+const mockRequest = (): LoadSurveyResultController.Request => ({
   userId: 'any_id',
-  params: { surveyId: 'any_id' }
+  surveyId: 'any_id'
 })
 
 describe('LoadSurveyResult Controller', () => {

@@ -3,15 +3,12 @@ import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { AddAccountSpy, AuthenticationSpy, ValidationSpy } from '@/presentation/test'
 import { SignUpController } from './signup-controller'
-import { HttpRequest } from './signup-controller-protocols'
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    email: 'any_email@mail.com',
-    name: 'any_name',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
-  }
+const mockRequest = (): SignUpController.Request => ({
+  email: 'any_email@mail.com',
+  name: 'any_name',
+  password: 'any_password',
+  passwordConfirmation: 'any_password'
 })
 
 type SutTypes = {
@@ -67,10 +64,10 @@ describe('SignUp Controller', () => {
 
   test('Should call Validation with correct value', async () => {
     const { sut, validationSpy } = makeSut()
-    const httpResponse = mockRequest()
-    await sut.handle(httpResponse)
+    const request = mockRequest()
+    await sut.handle(request)
 
-    expect(validationSpy.input).toEqual(httpResponse.body)
+    expect(validationSpy.input).toEqual(request)
   })
 
   test('Should return 400 if Validation returns an error', async () => {

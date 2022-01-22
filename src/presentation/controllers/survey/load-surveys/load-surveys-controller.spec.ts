@@ -3,9 +3,8 @@ import { noContent, ok, serverError } from '@/presentation/helpers/http/http-hel
 import { LoadSurveysSpy } from '@/presentation/test'
 import mockDate from 'mockdate'
 import { LoadSurveysController } from './load-surveys-controller'
-import { HttpRequest } from './load-surveys-controller-protocols'
 
-const mockRequest = (): HttpRequest => ({
+const mockRequest = (): LoadSurveysController.Request => ({
   userId: 'any_id'
 })
 
