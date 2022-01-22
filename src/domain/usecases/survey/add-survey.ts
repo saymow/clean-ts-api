@@ -1,14 +1,16 @@
-export type AddSurveyAnswerParams = {
-  image?: string
-  answer: string
-}
-
-export type AddSurveyParams = {
-  question: string
-  answers: AddSurveyAnswerParams[]
-  date: Date
-}
-
 export interface AddSurvey {
-  execute: (data: AddSurveyParams) => Promise<void>
+  execute: (data: AddSurvey.Params) => Promise<void>
+}
+
+export namespace AddSurvey {
+  export type Params = {
+    question: string
+    answers: AddSurveyAnswerParams[]
+    date: Date
+  }
+
+  type AddSurveyAnswerParams = {
+    image?: string
+    answer: string
+  }
 }

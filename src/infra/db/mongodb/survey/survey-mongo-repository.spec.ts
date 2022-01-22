@@ -1,11 +1,11 @@
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
-import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 import { Collection, ObjectId } from 'mongodb'
 import { mockAddAccountParams, mockAddSurveyParams } from '@/domain/test'
 import { AccountModel } from '@/domain/models/account'
+import { AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-repository'
 
-const mockAddSurveysParams = (): AddSurveyParams[] => ([mockAddSurveyParams(), mockAddSurveyParams()])
+const mockAddSurveysParams = (): AddSurveyRepository.Params[] => ([mockAddSurveyParams(), mockAddSurveyParams()])
 
 const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
