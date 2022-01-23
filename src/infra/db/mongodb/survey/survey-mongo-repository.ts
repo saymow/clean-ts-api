@@ -3,7 +3,6 @@ import { CheckSurveyByIdRepository } from '@/data/protocols/db/survey/check-surv
 import { LoadAnswersBySurveyRepository } from '@/data/protocols/db/survey/load-answers-by-survey-repository'
 import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey/load-survey-by-id-repository'
 import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-repository'
-import { SurveyModel } from '@/domain/models/survey'
 import { ObjectId } from 'mongodb'
 import { QueryBuilder } from '../helpers'
 import { MongoHelper } from '../helpers/mongo-helper'
@@ -22,7 +21,7 @@ export class SurveyMongoRepository implements
     return MongoHelper.map(survey)
   }
 
-  async loadAll (userId: string): Promise<SurveyModel[]> {
+  async loadAll (userId: string): Promise<LoadSurveysRepository.Result> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const query = new QueryBuilder()
       .lookup({
