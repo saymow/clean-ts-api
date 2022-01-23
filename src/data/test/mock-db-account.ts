@@ -3,12 +3,23 @@ import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-a
 import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
 import { UpdateAccessTokenRepository } from '@/data/protocols/db/account/update-access-token-repository'
 import { mockAccountModel } from '@/domain/test'
+import { CheckAccountByEmailRepository } from '../protocols/db/account/check-account-by-email-repository'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   addAccountParams: AddAccountRepository.Params
 
   async add (accountData: AddAccountRepository.Params): Promise<void> {
     this.addAccountParams = accountData
+  }
+}
+
+export class CheckAccountByEmailRepositorySpy implements CheckAccountByEmailRepository {
+  email: string
+  result = true
+
+  async checkByEmail (email: string): Promise<CheckAccountByEmailRepository.Result> {
+    this.email = email
+    return await Promise.resolve(this.result)
   }
 }
 

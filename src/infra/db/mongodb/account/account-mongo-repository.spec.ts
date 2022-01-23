@@ -32,6 +32,23 @@ describe('Survey Mongo Repository', () => {
     })
   })
 
+  describe('checkByEmail()', () => {
+    test('Should return true if account exists', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne(mockAddAccountParams())
+      const exists = await sut.checkByEmail(mockAddAccountParams().email)
+
+      expect(exists).toBeTruthy()
+    })
+
+    test('Should return false if account does not exists', async () => {
+      const sut = makeSut()
+      const exists = await sut.loadByEmail(mockAddAccountParams().email)
+
+      expect(exists).toBeFalsy()
+    })
+  })
+
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
       const sut = makeSut()
