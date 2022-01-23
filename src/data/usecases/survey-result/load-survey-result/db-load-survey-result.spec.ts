@@ -43,7 +43,7 @@ describe('DbLoadSurveyResult UseCase', () => {
 
   test('Should call LoadSurveyByIdRepository with correct values if LoadSurveyResultRepository returns null', async () => {
     const { sut, loadSurveyResultsRepositorySpy, loadSurveyByIdRepositorySpy } = makeSut()
-    loadSurveyResultsRepositorySpy.surveyResultModel = null
+    loadSurveyResultsRepositorySpy.result = null
     await sut.execute('any_survey_id', 'any_user_id')
 
     expect(loadSurveyByIdRepositorySpy.id).toBe('any_survey_id')
@@ -51,7 +51,7 @@ describe('DbLoadSurveyResult UseCase', () => {
 
   test('Should load surveyResult with all answers having count 0 if LoadSurveyResultRepository returns null', async () => {
     const { sut, loadSurveyResultsRepositorySpy } = makeSut()
-    loadSurveyResultsRepositorySpy.surveyResultModel = null
+    loadSurveyResultsRepositorySpy.result = null
     const surveyResult = await sut.execute('any_survey_id', 'any_user_id')
 
     expect(surveyResult).toEqual(mockSurveyResultModel())

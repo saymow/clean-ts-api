@@ -17,11 +17,11 @@ export class AddSurveySpy implements AddSurvey {
 
 export class LoadSurveysSpy implements LoadSurveys {
   userId: string
-  surveyModels = mockSurveyModels()
+  result = mockSurveyModels()
 
   async execute (userId: 'any_id'): Promise<SurveyModel[]> {
     this.userId = userId
-    return this.surveyModels
+    return this.result
   }
 }
 

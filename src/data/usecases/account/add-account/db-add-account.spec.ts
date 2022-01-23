@@ -41,7 +41,7 @@ describe('DbAddAccount UseCase', () => {
     expect(addAccountRepositorySpy.addAccountParams).toEqual({
       name: 'any_name',
       email: 'any_email@mail.com',
-      password: hasherSpy.digest
+      password: hasherSpy.result
     })
   })
 

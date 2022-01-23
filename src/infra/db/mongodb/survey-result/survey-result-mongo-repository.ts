@@ -1,14 +1,12 @@
 
-import { SaveSurveyResultRepository } from '@/data/protocols/db/survey-result/save-survey-result-repository'
-import { SurveyResultModel } from '@/domain/models/survey-result'
-import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
-import { ObjectId } from 'mongodb'
-import round from 'mongo-round'
-import { MongoHelper, QueryBuilder } from '@/infra/db/mongodb/helpers'
 import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/load-survey-result-repository'
+import { SaveSurveyResultRepository } from '@/data/protocols/db/survey-result/save-survey-result-repository'
+import { MongoHelper, QueryBuilder } from '@/infra/db/mongodb/helpers'
+import round from 'mongo-round'
+import { ObjectId } from 'mongodb'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
-  async save (data: SaveSurveyResultParams): Promise<void> {
+  async save (data: SaveSurveyResultRepository.Params): Promise<void> {
     const { accountId, surveyId, answer, date } = data
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.findOneAndUpdate(
@@ -21,7 +19,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     )
   }
 
-  async loadBySurveyId (surveyId: string, userId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId (surveyId: string, userId: string): Promise<LoadSurveyResultRepository.Result> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const query = new QueryBuilder()
       .match({
@@ -197,6 +195,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       .build()
     const surveyResult = await surveyResultCollection.aggregate(query).toArray()
 
-    return surveyResult.length ? surveyResult[0] as SurveyResultModel : null
+    return surveyResult.length ? surveyResult[0] as LoadSurveyResultRepository.Result : null
   }
 }

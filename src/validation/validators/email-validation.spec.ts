@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
 describe('EmailValidation', () => {
   test('Should  an error if EmailValidator returns false', () => {
     const { sut, emailValidatorSpy } = makeSut()
-    emailValidatorSpy.bool = false
+    emailValidatorSpy.result = false
     const error = sut.validate({ email: 'any_email@mail.com' })
 
     expect(error).toEqual(new InvalidParamError('email'))

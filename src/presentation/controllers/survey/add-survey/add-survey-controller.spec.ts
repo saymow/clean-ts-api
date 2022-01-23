@@ -45,7 +45,7 @@ describe('AddSurvey Controller', () => {
 
   test('Should return 400 if Validation returns an error', async () => {
     const { sut, validationSpy } = makeSut()
-    validationSpy.error = new Error()
+    validationSpy.result = new Error()
     const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(badRequest(new Error()))

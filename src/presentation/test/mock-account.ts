@@ -15,11 +15,11 @@ export class AddAccountSpy implements AddAccount {
 
 export class AuthenticationSpy implements Authentication {
   authenticationParams: Authentication.Params
-  authenticationModel = mockAuthenticationModel()
+  result = mockAuthenticationModel()
 
   async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
     this.authenticationParams = authentication
-    return this.authenticationModel
+    return this.result
   }
 }
 
