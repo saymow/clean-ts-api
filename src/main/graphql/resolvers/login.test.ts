@@ -70,5 +70,21 @@ describe('Login GraphQL', () => {
       expect(res.body.data.signup.accessToken).toBeTruthy()
       expect(res.body.data.signup.name).toBe('Gustavo')
     })
+
+    test('Should return forbidden on invalid data', async () => {
+      const password = await hash('123', 12)
+      await accountCollection.insertOne({
+        name: 'Gustavo',
+        email: 'gustavo_alves2010@yahoo.com.br',
+        password
+      })
+
+      const res = await supertest(app)
+        .post('/graphql')
+        .send({ query })
+
+      expect(res.status).toBe(403)
+      expect(res.body.data).toBeFalsy()
+    })
   })
 })
