@@ -121,4 +121,63 @@ describe('SurveyResult GraphQL', () => {
       expect(res.status).toBe(403)
     })
   })
+
+  describe('SaveSurveyResult Mutation', () => {
+    const query = (surveyId: string, answer: string): string => `mutation {
+      saveSurveyResult(surveyId: "${surveyId}", answer: "${answer}") {
+        question
+        answers {
+          answer
+          image
+          isCurrentAccountAnswer
+          count
+          percent
+        }
+        date
+      }
+    }`
+
+    test('Should return SurveyResult', async () => {
+      const accessToken = await makeAccessToken()
+      const now = new Date()
+      const { insertedId } = await surveyCollection.insertOne({
+        question: 'question',
+        answers: [
+          {
+            answer: 'Answer 1',
+            image: 'https://image-name.com'
+          },
+          {
+            answer: 'Answer 2'
+          }
+        ],
+        date: now
+      })
+
+      const res = await supertest(app)
+        .post('/graphql')
+        .set('x-access-token', accessToken)
+        .send({ query: query(insertedId.toHexString(), 'Answer 1') })
+
+      expect(res.status).toBe(200)
+      expect(res.body.data.saveSurveyResult.question).toBe('question')
+      expect(res.body.data.saveSurveyResult.answers).toEqual([
+        {
+          answer: 'Answer 1',
+          image: 'https://image-name.com',
+          count: 1,
+          percent: 100,
+          isCurrentAccountAnswer: true
+        },
+        {
+          answer: 'Answer 2',
+          image: null,
+          count: 0,
+          percent: 0,
+          isCurrentAccountAnswer: false
+        }
+      ])
+      expect(res.body.data.saveSurveyResult.date).toBe(now.toISOString())
+    })
+  })
 })
