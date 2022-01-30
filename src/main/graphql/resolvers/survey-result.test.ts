@@ -97,5 +97,28 @@ describe('SurveyResult GraphQL', () => {
       ])
       expect(res.body.data.surveyResult.date).toBe(now.toISOString())
     })
+
+    test('Should access denied error if no token is provided', async () => {
+      const { insertedId } = await surveyCollection.insertOne({
+        question: 'question',
+        answers: [
+          {
+            answer: 'Answer 1',
+            image: 'https://image-name.com'
+          },
+          {
+            answer: 'Answer 2'
+          }
+        ],
+        date: new Date()
+      })
+
+      const res = await supertest(app)
+        .post('/graphql')
+        .send({ query: query(insertedId.toHexString()) })
+
+      expect(res.body.data).toBeFalsy()
+      expect(res.status).toBe(403)
+    })
   })
 })
