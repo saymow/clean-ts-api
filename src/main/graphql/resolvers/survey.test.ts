@@ -93,5 +93,14 @@ describe('Survey GraphQL', () => {
       expect(res.body.data.surveys[0].didAnswer).toBe(false)
       expect(res.body.data.surveys[0].date).toBe(now.toISOString())
     })
+
+    test('Should access denied error if no token is provided', async () => {
+      const res = await supertest(app)
+        .post('/graphql')
+        .send({ query })
+
+      expect(res.body.data).toBeFalsy()
+      expect(res.status).toBe(403)
+    })
   })
 })
